@@ -6,7 +6,7 @@ import "./EntityPage.css"
 
 const Orders = () => {
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
+  const [error] = useState("")
 
   useEffect(() => {
     // Simulate loading

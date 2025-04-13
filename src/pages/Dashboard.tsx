@@ -16,7 +16,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts"
-import {  Settings, People, ShoppingCart, AttachMoney } from "@mui/icons-material"
+import { Settings, People, ShoppingCart, AttachMoney } from "@mui/icons-material"
 import axios from "axios"
 import "./Dashboard.css"
 
@@ -28,7 +28,6 @@ interface StatCard {
 }
 
 const Dashboard = () => {
-  const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState({
     motorcycles: 0,
     pieces: 0,
@@ -37,7 +36,6 @@ const Dashboard = () => {
     revenue: 0,
   })
 
-  // Sample data for charts
   const salesData = [
     { name: "Jan", sales: 4000 },
     { name: "Feb", sales: 3000 },
@@ -68,15 +66,12 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true)
 
-        // Fetch counts from API
         const motorcyclesRes = await axios.get("http://localhost:8080/motorcycles")
         const piecesRes = await axios.get("http://localhost:8080/pieces")
         const clientsRes = await axios.get("http://localhost:8080/clients")
         const ordersRes = await axios.get("http://localhost:8080/orders")
 
-        // Calculate total revenue from orders
         const orders = ordersRes.data
         const totalRevenue = orders.reduce((sum: number, order: any) => sum + Number.parseFloat(order.totalPrice), 0)
 
@@ -88,12 +83,8 @@ const Dashboard = () => {
           revenue: totalRevenue,
         })
 
-        setLoading(false)
       } catch (error) {
         console.error("Error fetching dashboard data:", error)
-        setLoading(false)
-
-        // Set sample data if API fails
         setStats({
           motorcycles: 24,
           pieces: 156,
@@ -108,36 +99,11 @@ const Dashboard = () => {
   }, [])
 
   const statCards: StatCard[] = [
-    {
-      title: "Motorcycles",
-      value: stats.motorcycles,
-      icon: <Settings />,
-      color: "#3f51b5",
-    },
-    {
-      title: "Pieces",
-      value: stats.pieces,
-      icon: <Settings />,
-      color: "#f50057",
-    },
-    {
-      title: "Clients",
-      value: stats.clients,
-      icon: <People />,
-      color: "#00a854",
-    },
-    {
-      title: "Orders",
-      value: stats.orders,
-      icon: <ShoppingCart />,
-      color: "#fa8c16",
-    },
-    {
-      title: "Revenue",
-      value: stats.revenue,
-      icon: <AttachMoney />,
-      color: "#722ed1",
-    },
+    { title: "Motorcycles", value: stats.motorcycles, icon: <Settings />, color: "#3f51b5" },
+    { title: "Pieces", value: stats.pieces, icon: <Settings />, color: "#f50057" },
+    { title: "Clients", value: stats.clients, icon: <People />, color: "#00a854" },
+    { title: "Orders", value: stats.orders, icon: <ShoppingCart />, color: "#fa8c16" },
+    { title: "Revenue", value: stats.revenue, icon: <AttachMoney />, color: "#722ed1" },
   ]
 
   return (
@@ -197,7 +163,7 @@ const Dashboard = () => {
                     dataKey="value"
                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   >
-                    {inventoryData.map((entry, index) => (
+                    {inventoryData.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
@@ -221,7 +187,7 @@ const Dashboard = () => {
                   <Tooltip />
                   <Legend />
                   <Bar dataKey="value" fill="#8884d8">
-                    {expenseData.map((entry, index) => (
+                    {expenseData.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Bar>
