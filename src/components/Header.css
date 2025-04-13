@@ -1,0 +1,107 @@
+.header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: var(--header-height);
+    background-color: var(--card-color);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 900;
+  }
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .header-menu-button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .header-icon-button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 16px;
+    position: relative;
+  }
+  
+  .header-profile {
+    position: relative;
+    margin-left: 16px;
+  }
+  
+  .header-profile-button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 4px;
+  }
+  
+  .header-profile-button:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+  
+  .header-profile-name {
+    margin-left: 8px;
+  }
+  
+  .header-profile-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 200px;
+    background-color: var(--card-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    margin-top: 8px;
+    z-index: 1000;
+  }
+  
+  .header-profile-menu ul {
+    list-style: none;
+    padding: 8px 0;
+  }
+  
+  .header-profile-menu li a {
+    display: block;
+    padding: 8px 16px;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: background-color 0.2s;
+  }
+  
+  .header-profile-menu li a:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+  
+  @media (max-width: 768px) {
+    .header-profile-name {
+      display: none;
+    }
+  }
+  
