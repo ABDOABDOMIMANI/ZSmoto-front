@@ -16,7 +16,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts"
-import { Settings, People, ShoppingCart, AttachMoney } from "@mui/icons-material"
+import { Settings, People, ShoppingCart, AttachMoney, TwoWheeler } from "@mui/icons-material"
 import axios from "axios"
 import "./Dashboard.css"
 
@@ -25,6 +25,10 @@ interface StatCard {
   value: number
   icon: JSX.Element
   color: string
+}
+
+interface OrderSummary {
+  totalPrice: number | string
 }
 
 const Dashboard = () => {
@@ -72,8 +76,8 @@ const Dashboard = () => {
         const clientsRes = await axios.get("http://localhost:8080/clients")
         const ordersRes = await axios.get("http://localhost:8080/orders")
 
-        const orders = ordersRes.data
-        const totalRevenue = orders.reduce((sum: number, order: any) => sum + Number.parseFloat(order.totalPrice), 0)
+        const orders: OrderSummary[] = ordersRes.data as OrderSummary[]
+        const totalRevenue = orders.reduce((sum: number, order: OrderSummary) => sum + Number.parseFloat(String(order.totalPrice)), 0)
 
         setStats({
           motorcycles: motorcyclesRes.data.length,
@@ -99,7 +103,7 @@ const Dashboard = () => {
   }, [])
 
   const statCards: StatCard[] = [
-    { title: "Motorcycles", value: stats.motorcycles, icon: <Settings />, color: "#3f51b5" },
+    { title: "Motorcycles", value: stats.motorcycles, icon: <TwoWheeler />, color: "#3f51b5" },
     { title: "Pieces", value: stats.pieces, icon: <Settings />, color: "#f50057" },
     { title: "Clients", value: stats.clients, icon: <People />, color: "#00a854" },
     { title: "Orders", value: stats.orders, icon: <ShoppingCart />, color: "#fa8c16" },
@@ -108,7 +112,7 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      <h1 className="page-title">Dashboard</h1>
+      <h1 className="page-title" >Dashboard</h1>
 
       <div className="stat-cards">
         {statCards.map((card, index) => (

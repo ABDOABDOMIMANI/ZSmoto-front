@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { Add, Edit, Delete, Search } from "@mui/icons-material"
+import { Add, Edit, Delete, Search, Close } from "@mui/icons-material"
 import { clientApi } from "../services/api"
 import "./EntityPage.css"
 
@@ -111,8 +111,9 @@ const Clients = () => {
     <div className="entity-page">
       <div className="page-header">
         <h1 className="page-title">Clients</h1>
-        <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
-          <Add /> Add Client
+        <button className="btn btn-primary btn-add" onClick={() => setShowForm(!showForm)}>
+          <Add className="btn-add-icon" />
+          <span>Add Client</span>
         </button>
       </div>
 
@@ -130,70 +131,79 @@ const Clients = () => {
       </div>
 
       {showForm && (
-        <div className="form-container card">
-          <h2>{currentClient ? "Edit Client" : "Add New Client"}</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="form-grid">
-              <div className="form-group">
-                <label htmlFor="clientType" className="form-label">
-                  Client Type
-                </label>
-                <select
-                  id="clientType"
-                  name="clientType"
-                  value={formData.clientType}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  required
-                >
-                  <option value="">Select Type</option>
-                  <option value="Individual">Individual</option>
-                  <option value="Business">Business</option>
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="phoneNumber" className="form-label">
-                  Phone Number
-                </label>
-                <input
-                  type="text"
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  required
-                  pattern="[0-9]{10}"
-                  title="Phone number must be 10 digits"
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="identityNumber" className="form-label">
-                  Identity Number (CNE/Passport)
-                </label>
-                <input
-                  type="text"
-                  id="identityNumber"
-                  name="identityNumber"
-                  value={formData.identityNumber}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-actions">
-              <button type="submit" className="btn btn-primary">
-                {currentClient ? "Update" : "Save"}
-              </button>
-              <button type="button" className="btn btn-outline" onClick={resetForm}>
-                Cancel
+        <div className="modal-overlay" onClick={resetForm}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{currentClient ? "Edit Client" : "Add New Client"}</h2>
+              <button className="modal-close" onClick={resetForm} aria-label="Close">
+                <Close />
               </button>
             </div>
-          </form>
+            <div className="modal-body">
+              <form onSubmit={handleSubmit}>
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label htmlFor="clientType" className="form-label">
+                      Client Type
+                    </label>
+                    <select
+                      id="clientType"
+                      name="clientType"
+                      value={formData.clientType}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      required
+                    >
+                      <option value="">Select Type</option>
+                      <option value="Individual">Individual</option>
+                      <option value="Business">Business</option>
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="phoneNumber" className="form-label">
+                      Phone Number
+                    </label>
+                    <input
+                      type="text"
+                      id="phoneNumber"
+                      name="phoneNumber"
+                      value={formData.phoneNumber}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      required
+                      pattern="[0-9]{10}"
+                      title="Phone number must be 10 digits"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="identityNumber" className="form-label">
+                      Identity Number (CNE/Passport)
+                    </label>
+                    <input
+                      type="text"
+                      id="identityNumber"
+                      name="identityNumber"
+                      value={formData.identityNumber}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-actions">
+                  <button type="submit" className="btn btn-primary">
+                    {currentClient ? "Update" : "Save"}
+                  </button>
+                  <button type="button" className="btn btn-outline" onClick={resetForm}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       )}
 

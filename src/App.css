@@ -13,6 +13,19 @@
   --transition-speed: 0.3s;
 }
 
+/* Dark theme variables */
+.dark-theme {
+  --primary-color: #7c9cff;
+  --primary-light: #a9bfff;
+  --primary-dark: #3a57c4;
+  --secondary-color: #ff4d6d;
+  --text-color: #e6e6e6;
+  --text-light: #b3b3b3;
+  --background-color: darkgray;
+  --card-color: #1d1d1d;
+  --border-color: #2a2a2a;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -20,7 +33,7 @@
 }
 
 body {
-  font-family: "Roboto", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Inter", "Roboto", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
 }
@@ -46,6 +59,11 @@ body {
 .main-content {
   padding: 20px;
   margin-top: var(--header-height);
+}
+
+/* Dark mode: main content background */
+.dark-theme .main-content {
+  background-color: rgb(155, 155, 167);
 }
 
 /* Card styles */
@@ -171,13 +189,37 @@ body {
 }
 
 .table th {
-  background-color: #f9f9f9;
+  background-color: var(--card-color);
   font-weight: 500;
 }
 
-.table tr:hover {
-  background-color: #f5f5f5;
+/* Dark mode: table header black background */
+.dark-theme .table th {
+  color: var(--text-color);
 }
+
+.table tr:hover {
+  background-color: #dbf8f8;
+}
+
+/* Dark mode: ensure hovered row text is black for readability */
+.dark-theme .table tbody tr:hover td,
+.dark-theme .table tbody tr:hover th {
+  color: #000;
+}
+
+/* Ensure icon buttons inherit and allow custom color */
+.btn-icon svg {
+  color: inherit;
+  fill: currentColor;
+}
+
+/* Dark mode: make edit icon black only when the row is hovered */
+.dark-theme .table tbody tr:hover .actions-cell .btn-icon:not(.delete) {
+  color: #000;
+}
+
+
 
 /* Status badges */
 .badge {

@@ -2,8 +2,8 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
-import { Add, Edit, Delete, Search } from "@mui/icons-material"
+import { useState, useEffect, useRef } from "react"
+import { Add, Edit, Delete, Search, Close } from "@mui/icons-material"
 import { pieceApi } from "../services/api"
 import "./EntityPage.css"
 
@@ -32,6 +32,9 @@ const Pieces = () => {
     quantity: 0,
     image: "",
   })
+  const [imagePreview, setImagePreview] = useState<string>("")
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     fetchPieces()
@@ -63,9 +66,27 @@ const Pieces = () => {
     e.preventDefault()
     try {
       if (currentPiece) {
-        await pieceApi.update(currentPiece.id, formData)
+        if (imageFile) {
+          const multipart = new FormData()
+          multipart.append("name", formData.name)
+          multipart.append("description", formData.description)
+          multipart.append("purchasePrice", String(formData.purchasePrice))
+          multipart.append("sellPrice", String(formData.sellPrice))
+          multipart.append("quantity", String(formData.quantity))
+          multipart.append("image", imageFile)
+          await pieceApi.update(currentPiece.id, multipart)
+        } else {
+          await pieceApi.update(currentPiece.id, formData)
+        }
       } else {
-        await pieceApi.create(formData)
+        const multipart = new FormData()
+        multipart.append("name", formData.name)
+        multipart.append("description", formData.description)
+        multipart.append("purchasePrice", String(formData.purchasePrice))
+        multipart.append("sellPrice", String(formData.sellPrice))
+        multipart.append("quantity", String(formData.quantity))
+        if (imageFile) multipart.append("image", imageFile)
+        await pieceApi.create(multipart)
       }
       fetchPieces()
       resetForm()
@@ -73,6 +94,34 @@ const Pieces = () => {
       console.error("Error saving piece:", err)
       setError("Failed to save piece. Please try again.")
     }
+  }
+
+  const handleImageFile = (file: File | null) => {
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      const dataUrl = typeof reader.result === "string" ? reader.result : ""
+      setFormData({ ...formData, image: dataUrl })
+      setImagePreview(dataUrl)
+    }
+    reader.readAsDataURL(file)
+    setImageFile(file)
+  }
+
+  const handleImageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0] ? e.target.files[0] : null
+    handleImageFile(file)
+  }
+
+  const handleDrop: React.DragEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault()
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleImageFile(e.dataTransfer.files[0])
+    }
+  }
+
+  const handleDragOver: React.DragEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault()
   }
 
   const handleEdit = (piece: PieceMoto) => {
@@ -85,6 +134,9 @@ const Pieces = () => {
       quantity: piece.quantity,
       image: piece.image,
     })
+    const existing = piece.image || ""
+    const prefixed = existing ? (existing.startsWith("data:") ? existing : `data:image/*;base64,${existing}`) : ""
+    setImagePreview(prefixed)
     setShowForm(true)
   }
 
@@ -110,6 +162,8 @@ const Pieces = () => {
       quantity: 0,
       image: "",
     })
+    setImagePreview("")
+    setImageFile(null)
     setShowForm(false)
   }
 
@@ -123,8 +177,9 @@ const Pieces = () => {
     <div className="entity-page">
       <div className="page-header">
         <h1 className="page-title">Motorcycle Parts</h1>
-        <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
-          <Add /> Add Part
+        <button className="btn btn-primary btn-add" onClick={() => setShowForm(!showForm)}>
+          <Add className="btn-add-icon" />
+          <span>Add Part</span>
         </button>
       </div>
 
@@ -142,113 +197,144 @@ const Pieces = () => {
       </div>
 
       {showForm && (
-        <div className="form-container card">
-          <h2>{currentPiece ? "Edit Part" : "Add New Part"}</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="form-grid">
-              <div className="form-group">
-                <label htmlFor="name" className="form-label">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="description" className="form-label">
-                  Description
-                </label>
-                <textarea
-                  id="description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  rows={3}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="purchasePrice" className="form-label">
-                  Purchase Price
-                </label>
-                <input
-                  type="number"
-                  id="purchasePrice"
-                  name="purchasePrice"
-                  value={formData.purchasePrice}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  required
-                  min="0"
-                  step="0.01"
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="sellPrice" className="form-label">
-                  Sell Price
-                </label>
-                <input
-                  type="number"
-                  id="sellPrice"
-                  name="sellPrice"
-                  value={formData.sellPrice}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  required
-                  min="0"
-                  step="0.01"
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="quantity" className="form-label">
-                  Quantity
-                </label>
-                <input
-                  type="number"
-                  id="quantity"
-                  name="quantity"
-                  value={formData.quantity}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  required
-                  min="0"
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="image" className="form-label">
-                  Image URL
-                </label>
-                <input
-                  type="text"
-                  id="image"
-                  name="image"
-                  value={formData.image}
-                  onChange={handleInputChange}
-                  className="form-input"
-                />
-              </div>
-            </div>
-
-            <div className="form-actions">
-              <button type="submit" className="btn btn-primary">
-                {currentPiece ? "Update" : "Save"}
-              </button>
-              <button type="button" className="btn btn-outline" onClick={resetForm}>
-                Cancel
+        <div className="modal-overlay" onClick={resetForm}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{currentPiece ? "Edit Part" : "Add New Part"}</h2>
+              <button className="modal-close" onClick={resetForm} aria-label="Close">
+                <Close />
               </button>
             </div>
-          </form>
+            <div className="modal-body">
+              <form onSubmit={handleSubmit}>
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label htmlFor="name" className="form-label">
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="description" className="form-label">
+                      Description
+                    </label>
+                    <textarea
+                      id="description"
+                      name="description"
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      rows={3}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="purchasePrice" className="form-label">
+                      Purchase Price
+                    </label>
+                    <input
+                      type="number"
+                      id="purchasePrice"
+                      name="purchasePrice"
+                      value={formData.purchasePrice}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      required
+                      min="0"
+                      step="0.01"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="sellPrice" className="form-label">
+                      Sell Price
+                    </label>
+                    <input
+                      type="number"
+                      id="sellPrice"
+                      name="sellPrice"
+                      value={formData.sellPrice}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      required
+                      min="0"
+                      step="0.01"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="quantity" className="form-label">
+                      Quantity
+                    </label>
+                    <input
+                      type="number"
+                      id="quantity"
+                      name="quantity"
+                      value={formData.quantity}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      required
+                      min="0"
+                    />
+                  </div>
+
+                  <div className="form-group image-upload-group">
+                    <label htmlFor="image" className="form-label">
+                      Image
+                    </label>
+                    <div
+                      className="upload-area"
+                      onDrop={handleDrop}
+                      onDragOver={handleDragOver}
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      {imagePreview || formData.image ? (
+                        <div className="image-preview">
+                          <img
+                            src={
+                              imagePreview || (formData.image ? (formData.image.startsWith("data:") ? formData.image : `data:image/*;base64,${formData.image}`) : "")
+                            }
+                            alt="Preview"
+                          />
+                        </div>
+                      ) : (
+                        <>
+                          <p>Drag & drop an image here, or</p>
+                          <label htmlFor="fileInputPiece" className="btn btn-outline upload-button">Choose file</label>
+                        </>
+                      )}
+                      <input
+                        id="fileInputPiece"
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageInputChange}
+                        style={{ display: "none" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="form-actions">
+                  <button type="submit" className="btn btn-primary">
+                    {currentPiece ? "Update" : "Save"}
+                  </button>
+                  <button type="button" className="btn btn-outline" onClick={resetForm}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       )}
 
@@ -276,7 +362,11 @@ const Pieces = () => {
                   <tr key={piece.id}>
                     <td>
                       {piece.image ? (
-                        <img src={piece.image || "/placeholder.svg"} alt={piece.name} className="table-image" />
+                        <img
+                          src={piece.image.startsWith("data:") ? piece.image : `data:image/*;base64,${piece.image}`}
+                          alt={piece.name}
+                          className="table-image"
+                        />
                       ) : (
                         <div className="no-image">No Image</div>
                       )}

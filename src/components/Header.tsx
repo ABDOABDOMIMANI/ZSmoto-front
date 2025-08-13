@@ -1,7 +1,6 @@
 "use client"
 
-import { useState } from "react"
-import { Menu, Notifications, AccountCircle } from "@mui/icons-material"
+import { Menu, DarkMode, LightMode } from "@mui/icons-material"
 import "./Header.css"
 
 interface HeaderProps {
@@ -9,12 +8,17 @@ interface HeaderProps {
 }
 
 const Header = ({ toggleSidebar }: HeaderProps) => {
-  const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const isDark = typeof document !== "undefined" && document.body.classList.contains("dark-theme")
 
-  const toggleProfileMenu = () => {
-    setShowProfileMenu(!showProfileMenu)
+  const toggleTheme = () => {
+    if (document.body.classList.contains("dark-theme")) {
+      document.body.classList.remove("dark-theme")
+      localStorage.removeItem("theme:dark")
+    } else {
+      document.body.classList.add("dark-theme")
+      localStorage.setItem("theme:dark", "1")
+    }
   }
-
   return (
     <header className="header">
       <div className="header-left">
@@ -23,30 +27,20 @@ const Header = ({ toggleSidebar }: HeaderProps) => {
         </button>
       </div>
       <div className="header-right">
-        <button className="header-icon-button">
-          <Notifications />
+        <button className="header-icon-button" onClick={toggleTheme} title="Toggle theme">
+          {isDark ? <LightMode /> : <DarkMode />}
         </button>
-        <div className="header-profile">
-          <button className="header-profile-button" onClick={toggleProfileMenu}>
-            <AccountCircle />
-            <span className="header-profile-name">Admin</span>
-          </button>
-          {showProfileMenu && (
-            <div className="header-profile-menu">
-              <ul>
-                <li>
-                  <a href="#">Profile</a>
-                </li>
-                <li>
-                  <a href="#">Settings</a>
-                </li>
-                <li>
-                  <a href="#">Logout</a>
-                </li>
-              </ul>
-            </div>
-          )}
-        </div>
+        <button
+          className="header-icon-button"
+          onClick={() => {
+            if (window.confirm("Are you sure you want to logout?")) {
+              localStorage.removeItem("authenticated");
+              window.location.replace("/");
+            }
+          }}
+        >
+          Logout
+        </button>
       </div>
     </header>
   )

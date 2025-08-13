@@ -1,21 +1,37 @@
 import axios from "axios"
 
-const API_URL = "http://localhost:8080"
+// Use build-time injected API URL or fallback to localhost
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const API_URL = typeof __API_URL__ !== 'undefined' ? __API_URL__ : (import.meta.env.VITE_API_URL || "http://localhost:8080")
 
 // Create axios instance with base URL
 const api = axios.create({
   baseURL: API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
 })
 
 // Motorcycle API
 export const motorcycleApi = {
   getAll: () => api.get("/motorcycles"),
   getById: (id: string) => api.get(`/motorcycles/${id}`),
-  create: (data: any) => api.post("/motorcycles", data),
-  update: (id: number, data: any) => api.put(`/motorcycles/${id}`, data),
+  create: (data: any) => {
+    if (data instanceof FormData) {
+      return api.post("/motorcycles", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+    }
+    return api.post("/motorcycles", data)
+  },
+  update: (id: number, data: any) => {
+    if (data instanceof FormData) {
+      return api.put(`/motorcycles/${id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+    }
+    return api.put(`/motorcycles/${id}`, data, {
+      headers: { "Content-Type": "application/json" },
+    })
+  },
   delete: (id: number) => api.delete(`/motorcycles/${id}`),
 }
 
@@ -23,8 +39,18 @@ export const motorcycleApi = {
 export const pieceApi = {
   getAll: () => api.get("/pieces"),
   getById: (id: number) => api.get(`/pieces/${id}`),
-  create: (data: any) => api.post("/pieces", data),
-  update: (id: number, data: any) => api.put(`/pieces/${id}`, data),
+  create: (data: any) => {
+    if (data instanceof FormData) {
+      return api.post("/pieces", data, { headers: { "Content-Type": "multipart/form-data" } })
+    }
+    return api.post("/pieces", data)
+  },
+  update: (id: number, data: any) => {
+    if (data instanceof FormData) {
+      return api.put(`/pieces/${id}`, data, { headers: { "Content-Type": "multipart/form-data" } })
+    }
+    return api.put(`/pieces/${id}`, data)
+  },
   delete: (id: number) => api.delete(`/pieces/${id}`),
 }
 

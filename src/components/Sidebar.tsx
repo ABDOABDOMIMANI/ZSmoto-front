@@ -11,6 +11,7 @@ import {
   AccessTime,
   AttachMoney,
   ChevronLeft,
+  TwoWheeler,
 } from "@mui/icons-material"
 import "./Sidebar.css"
 
@@ -37,14 +38,14 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
       <div className="sidebar-content">
         <ul className="sidebar-menu">
           <li className={`sidebar-item ${isActive("/")}`}>
-            <Link to="/" className="sidebar-link">
+            <Link to="/dashboard" className="sidebar-link">
               <Home className="sidebar-icon" />
               <span className="sidebar-text">Dashboard</span>
             </Link>
           </li>
           <li className={`sidebar-item ${isActive("/motorcycles")}`}>
             <Link to="/motorcycles" className="sidebar-link">
-              <Settings className="sidebar-icon" />
+              <TwoWheeler className="sidebar-icon" />
               <span className="sidebar-text">Motorcycles</span>
             </Link>
           </li>
