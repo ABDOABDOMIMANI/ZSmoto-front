@@ -53,7 +53,7 @@ const Motorcycles = () => {
     try {
       setLoading(true)
       const response = await motorcycleApi.getAll()
-      setMotorcycles(response.data)
+      setMotorcycles(response.data as unknown as Motorcycle[])
       setLoading(false)
     } catch (err) {
       console.error("Error fetching motorcycles:", err)

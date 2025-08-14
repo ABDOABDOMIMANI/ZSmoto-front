@@ -18,6 +18,7 @@ import {
 } from "recharts"
 import { Settings, People, ShoppingCart, AttachMoney, TwoWheeler } from "@mui/icons-material"
 import axios from "axios"
+import { REACT_APP_API_URL } from "../services/api"
 import "./Dashboard.css"
 
 interface StatCard {
@@ -71,10 +72,10 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
 
-        const motorcyclesRes = await axios.get("http://localhost:8080/motorcycles")
-        const piecesRes = await axios.get("http://localhost:8080/pieces")
-        const clientsRes = await axios.get("http://localhost:8080/clients")
-        const ordersRes = await axios.get("http://localhost:8080/orders")
+        const motorcyclesRes = await axios.get(`${REACT_APP_API_URL}/motorcycles`)
+        const piecesRes = await axios.get(`${REACT_APP_API_URL}/pieces`)
+        const clientsRes = await axios.get(`${REACT_APP_API_URL}/clients`)
+        const ordersRes = await axios.get(`${REACT_APP_API_URL}/orders`)
 
         const orders: OrderSummary[] = ordersRes.data as OrderSummary[]
         const totalRevenue = orders.reduce((sum: number, order: OrderSummary) => sum + Number.parseFloat(String(order.totalPrice)), 0)
