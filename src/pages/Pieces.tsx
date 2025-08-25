@@ -44,7 +44,7 @@ const Pieces = () => {
     try {
       setLoading(true)
       const response = await pieceApi.getAll()
-      setPieces(response.data)
+      setPieces(response.data as unknown as PieceMoto[])
       setLoading(false)
     } catch (err) {
       console.error("Error fetching pieces:", err)
