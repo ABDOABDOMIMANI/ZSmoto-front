@@ -153,7 +153,7 @@ const Dashboard = () => {
         <div className="charts-row">
           <div className="card chart-card">
             <div className="card-header">
-              <h2 className="card-title">Inventory Distribution</h2>
+              <h2 className="card-title">Inventory Distributions</h2>
             </div>
             <div className="chart-container">
               <ResponsiveContainer width="100%" height={300}>
