@@ -66,7 +66,7 @@
   }
   
   .chart-container {
-    height: clamp(220px, 40vw, 320px);
+    height: 300px;
     width: 100%;
   }
   
@@ -83,10 +83,6 @@
   
     .charts-row {
       grid-template-columns: 1fr;
-    }
-
-    .page-title {
-      font-size: 1.5rem;
     }
   }
   

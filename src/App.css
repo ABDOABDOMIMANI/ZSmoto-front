@@ -251,10 +251,6 @@ body {
     margin-left: 0;
   }
 
-  .main-content {
-    padding: 12px;
-  }
-
   .grid {
     grid-template-columns: 1fr;
   }

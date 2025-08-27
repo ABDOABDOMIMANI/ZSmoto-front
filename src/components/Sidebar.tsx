@@ -27,17 +27,6 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
     return location.pathname === path ? "active" : ""
   }
 
-  // Close sidebar when route changes (mobile UX)
-  const prevPathRef = (globalThis as any).__prevPathRef || { current: location.pathname }
-  ;(globalThis as any).__prevPathRef = prevPathRef
-  if (prevPathRef.current !== location.pathname && isOpen) {
-    // best-effort: close on navigation for small screens
-    if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
-      toggleSidebar()
-    }
-    prevPathRef.current = location.pathname
-  }
-
   return (
     <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
       <div className="sidebar-header">
@@ -49,65 +38,49 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
       <div className="sidebar-content">
         <ul className="sidebar-menu">
           <li className={`sidebar-item ${isActive("/")}`}>
-            <Link to="/dashboard" className="sidebar-link" onClick={() => {
-              if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) toggleSidebar()
-            }}>
+            <Link to="/dashboard" className="sidebar-link">
               <Home className="sidebar-icon" />
               <span className="sidebar-text">Dashboard</span>
             </Link>
           </li>
           <li className={`sidebar-item ${isActive("/motorcycles")}`}>
-            <Link to="/motorcycles" className="sidebar-link" onClick={() => {
-              if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) toggleSidebar()
-            }}>
+            <Link to="/motorcycles" className="sidebar-link">
               <TwoWheeler className="sidebar-icon" />
               <span className="sidebar-text">Motorcycles</span>
             </Link>
           </li>
           <li className={`sidebar-item ${isActive("/pieces")}`}>
-            <Link to="/pieces" className="sidebar-link" onClick={() => {
-              if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) toggleSidebar()
-            }}>
+            <Link to="/pieces" className="sidebar-link">
               <Settings className="sidebar-icon" />
               <span className="sidebar-text">Pieces</span>
             </Link>
           </li>
           <li className={`sidebar-item ${isActive("/clients")}`}>
-            <Link to="/clients" className="sidebar-link" onClick={() => {
-              if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) toggleSidebar()
-            }}>
+            <Link to="/clients" className="sidebar-link">
               <People className="sidebar-icon" />
               <span className="sidebar-text">Clients</span>
             </Link>
           </li>
           <li className={`sidebar-item ${isActive("/orders")}`}>
-            <Link to="/orders" className="sidebar-link" onClick={() => {
-              if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) toggleSidebar()
-            }}>
+            <Link to="/orders" className="sidebar-link">
               <ShoppingCart className="sidebar-icon" />
               <span className="sidebar-text">Orders</span>
             </Link>
           </li>
           <li className={`sidebar-item ${isActive("/workers")}`}>
-            <Link to="/workers" className="sidebar-link" onClick={() => {
-              if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) toggleSidebar()
-            }}>
+            <Link to="/workers" className="sidebar-link">
               <Person className="sidebar-icon" />
               <span className="sidebar-text">Workers</span>
             </Link>
           </li>
           <li className={`sidebar-item ${isActive("/deadlines")}`}>
-            <Link to="/deadlines" className="sidebar-link" onClick={() => {
-              if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) toggleSidebar()
-            }}>
+            <Link to="/deadlines" className="sidebar-link">
               <AccessTime className="sidebar-icon" />
               <span className="sidebar-text">Deadlines</span>
             </Link>
           </li>
           <li className={`sidebar-item ${isActive("/expenses")}`}>
-            <Link to="/expenses" className="sidebar-link" onClick={() => {
-              if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) toggleSidebar()
-            }}>
+            <Link to="/expenses" className="sidebar-link">
               <AttachMoney className="sidebar-icon" />
               <span className="sidebar-text">Expenses</span>
             </Link>

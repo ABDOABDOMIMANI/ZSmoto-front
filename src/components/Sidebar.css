@@ -90,12 +90,9 @@
   
   @media (max-width: 768px) {
     .sidebar {
-      width: 85%;
-      max-width: 360px;
-      transform: translateX(-100%);
-      box-shadow: 0 0 0 9999px rgba(0,0,0,0.35);
+      width: 100%;
     }
-
+  
     .sidebar.open {
       transform: translateX(0);
     }
