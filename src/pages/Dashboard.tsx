@@ -17,6 +17,7 @@ import {
   Cell,
 } from "recharts"
 import { Settings, People, ShoppingCart, AttachMoney, TwoWheeler } from "@mui/icons-material"
+import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { REACT_APP_API_URL } from "../services/api"
 import "./Dashboard.css"
@@ -33,6 +34,7 @@ interface OrderSummary {
 }
 
 const Dashboard = () => {
+  const navigate = useNavigate()
   const [stats, setStats] = useState({
     motorcycles: 0,
     pieces: 0,
@@ -111,13 +113,43 @@ const Dashboard = () => {
     { title: "Revenue", value: stats.revenue, icon: <AttachMoney />, color: "#722ed1" },
   ]
 
+  const routeFor = (title: string): string | undefined => {
+    switch (title) {
+      case "Motorcycles":
+        return "/motorcycles"
+      case "Pieces":
+        return "/pieces"
+      case "Clients":
+        return "/clients"
+      case "Orders":
+        return "/orders"
+      default:
+        return undefined
+    }
+  }
+
   return (
     <div className="dashboard">
       <h1 className="page-title" >Dashboard</h1>
 
       <div className="stat-cards">
         {statCards.map((card, index) => (
-          <div className="stat-card" key={index}>
+          <div
+            className={`stat-card ${routeFor(card.title) ? "clickable" : ""}`}
+            key={index}
+            role={routeFor(card.title) ? "button" : undefined}
+            tabIndex={routeFor(card.title) ? 0 : -1}
+            onClick={() => {
+              const path = routeFor(card.title)
+              if (path) navigate(path)
+            }}
+            onKeyDown={(e) => {
+              if ((e.key === "Enter" || e.key === " ") && routeFor(card.title)) {
+                e.preventDefault()
+                navigate(routeFor(card.title) as string)
+              }
+            }}
+          >
             <div className="stat-card-icon" style={{ backgroundColor: card.color }}>
               {card.icon}
             </div>

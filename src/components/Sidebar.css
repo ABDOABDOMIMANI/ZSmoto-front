@@ -30,6 +30,12 @@
     font-weight: 500;
     color: var(--primary-color);
   }
+
+  .sidebar-logo {
+    height: 70px;
+    width: auto;
+    object-fit: contain;
+  }
   
   .sidebar-toggle {
     background: none;

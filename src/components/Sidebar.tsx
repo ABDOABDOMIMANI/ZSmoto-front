@@ -14,6 +14,7 @@ import {
   TwoWheeler,
 } from "@mui/icons-material"
 import "./Sidebar.css"
+import logoPng from "../assets/images/logo.png"
 
 interface SidebarProps {
   isOpen: boolean
@@ -30,7 +31,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
   return (
     <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
       <div className="sidebar-header">
-        <h2 className="sidebar-title">Moto Inventory</h2>
+        <img src={logoPng} alt="Logo" className="sidebar-logo" />
         <button className="sidebar-toggle" onClick={toggleSidebar}>
           <ChevronLeft />
         </button>

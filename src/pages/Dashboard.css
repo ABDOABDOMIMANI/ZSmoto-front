@@ -23,7 +23,12 @@
     padding: 20px;
     display: flex;
     align-items: center;
+    transition: transform 140ms ease, box-shadow 160ms ease;
   }
+
+  .stat-card.clickable { cursor: pointer; }
+  .stat-card.clickable:hover { transform: scale(1.1); box-shadow: 0 6px 18px rgba(0,0,0,0.12); }
+  .stat-card.clickable:active { transform: scale(1.00); }
   
   .stat-card-icon {
     display: flex;
