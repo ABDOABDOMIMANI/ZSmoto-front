@@ -28,6 +28,8 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
     return location.pathname === path ? "active" : ""
   }
 
+  const role = (typeof localStorage !== "undefined" && localStorage.getItem("role")) || "admin"
+
   return (
     <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
       <div className="sidebar-header">
@@ -68,24 +70,28 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
               <span className="sidebar-text">Orders</span>
             </Link>
           </li>
-          <li className={`sidebar-item ${isActive("/workers")}`}>
-            <Link to="/workers" className="sidebar-link">
-              <Person className="sidebar-icon" />
-              <span className="sidebar-text">Workers</span>
-            </Link>
-          </li>
-          <li className={`sidebar-item ${isActive("/deadlines")}`}>
-            <Link to="/deadlines" className="sidebar-link">
-              <AccessTime className="sidebar-icon" />
-              <span className="sidebar-text">Deadlines</span>
-            </Link>
-          </li>
-          <li className={`sidebar-item ${isActive("/expenses")}`}>
-            <Link to="/expenses" className="sidebar-link">
-              <AttachMoney className="sidebar-icon" />
-              <span className="sidebar-text">Expenses</span>
-            </Link>
-          </li>
+          {role !== "limited" && (
+            <>
+              <li className={`sidebar-item ${isActive("/workers")}`}>
+                <Link to="/workers" className="sidebar-link">
+                  <Person className="sidebar-icon" />
+                  <span className="sidebar-text">Workers</span>
+                </Link>
+              </li>
+              <li className={`sidebar-item ${isActive("/deadlines")}`}>
+                <Link to="/deadlines" className="sidebar-link">
+                  <AccessTime className="sidebar-icon" />
+                  <span className="sidebar-text">Deadlines</span>
+                </Link>
+              </li>
+              <li className={`sidebar-item ${isActive("/expenses")}`}>
+                <Link to="/expenses" className="sidebar-link">
+                  <AttachMoney className="sidebar-icon" />
+                  <span className="sidebar-text">Expenses</span>
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </div>
       <div className="sidebar-footer">

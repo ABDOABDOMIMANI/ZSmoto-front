@@ -35,6 +35,7 @@ const Header = ({ toggleSidebar }: HeaderProps) => {
           onClick={() => {
             if (window.confirm("Are you sure you want to logout?")) {
               localStorage.removeItem("authenticated");
+              localStorage.removeItem("role");
               window.location.replace("/");
             }
           }}

@@ -20,9 +20,22 @@ function isAuthenticated() {
   return localStorage.getItem("authenticated") === "true"
 }
 
+function getRole(): string {
+  return localStorage.getItem("role") || "admin"
+}
+
 // A wrapper for protected routes
 function PrivateRoute({ element }: { element: React.ReactElement }) {
   return isAuthenticated() ? element : <Navigate to="/" replace />
+}
+
+function RoleRoute({ element, disallow }: { element: React.ReactElement; disallow?: string[] }) {
+  if (!isAuthenticated()) return <Navigate to="/" replace />
+  const role = getRole()
+  if (disallow && disallow.includes(role)) {
+    return <Navigate to="/dashboard" replace />
+  }
+  return element
 }
 
 // Custom Login wrapper to handle redirect on successful login
@@ -87,9 +100,9 @@ function AppLayout() {
             <Route path="/pieces" element={<PrivateRoute element={<Pieces />} />} />
             <Route path="/clients" element={<PrivateRoute element={<Clients />} />} />
             <Route path="/orders" element={<PrivateRoute element={<Orders />} />} />
-            <Route path="/workers" element={<PrivateRoute element={<Workers />} />} />
-            <Route path="/deadlines" element={<PrivateRoute element={<Deadlines />} />} />
-            <Route path="/expenses" element={<PrivateRoute element={<Expenses />} />} />
+            <Route path="/workers" element={<RoleRoute disallow={["limited"]} element={<Workers />} />} />
+            <Route path="/deadlines" element={<RoleRoute disallow={["limited"]} element={<Deadlines />} />} />
+            <Route path="/expenses" element={<RoleRoute disallow={["limited"]} element={<Expenses />} />} />
             <Route path="*" element={<CatchAllRoute />} />
           </Routes>
         </main>

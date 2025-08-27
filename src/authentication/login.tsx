@@ -14,17 +14,31 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === "souhail" && password === "souhail") {
+    const u = username.trim().toLowerCase();
+    const p = password.trim().toLowerCase();
+    if (u === "souhail" && p === "souhail") {
       setError("");
+      localStorage.setItem("role", "admin");
       if (onLoginSuccess) {
         onLoginSuccess();
       } else {
         localStorage.setItem("authenticated", "true");
         navigate("/dashboard", { replace: true });
       }
-    } else {
-      setError("Invalid username or password. Please try again.");
+      return;
     }
+    if (u === "abdo" && p === "abdo") {
+      setError("");
+      localStorage.setItem("role", "limited");
+      if (onLoginSuccess) {
+        onLoginSuccess();
+      } else {
+        localStorage.setItem("authenticated", "true");
+        navigate("/dashboard", { replace: true });
+      }
+      return;
+    }
+    setError("Invalid username or password. Please try again.");
   };
 
   return (
